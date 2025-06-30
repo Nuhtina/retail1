@@ -1,0 +1,101 @@
+﻿<Page x:Class="retail.Pages.UserDataOutput"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:retail.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="UserDataOutput" Background="#FF302F38">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Навигационная панель -->
+        <Border Grid.Row="0" Background="#FF7174B9" Padding="10" CornerRadius="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="🏠 Главная" Click="BtnMain_Click" Width="120" Height="30" IsEnabled="False" Foreground="#FF2F3A6E"/>
+                <Button Content="★ Избранное" Click="BtnFavorites_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="🛒 Корзина" Click="BtnCart_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="📝 Мои заказы" Click="BtnUserOrders_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="👤 Аккаунт" Click="BtnAccount_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="Выйти" Click="BtnLogout_Click" Width="120" Foreground="#FF2F3A6E"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Основное содержимое -->
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Панель фильтров -->
+            <Border Grid.Column="0" Background="#FF7174B9" Padding="10" CornerRadius="10" Margin="0,0,10,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Поиск" Margin="0 0 0 5"/>
+                        <TextBox x:Name="tbSearch" Tag="Поиск..." TextChanged="TbSearch_TextChanged"/>
+
+                        <TextBlock Text="Категория" Margin="0 10 0 5"/>
+                        <ComboBox x:Name="cbCategories" DisplayMemberPath="Name" SelectionChanged="CbCategories_SelectionChanged"/>
+
+                        <TextBlock Text="Бренд"  Margin="0 10 0 5"/>
+                        <ComboBox x:Name="cbBrands" SelectionChanged="CbBrands_SelectionChanged"/>
+
+                        <TextBlock Text="Сортировка"  Margin="0 10 0 5"/>
+                        <ComboBox x:Name="cbSort" SelectionChanged="CbSort_SelectionChanged"/>
+
+                        <TextBlock Text="Ценовой диапазон" Margin="0 10 0 5"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBox x:Name="tbMinPrice" Width="70" Tag="От" TextChanged="PriceFilter_TextChanged"/>
+                            <TextBlock Text="-" Margin="5 0 5 0"/>
+                            <TextBox x:Name="tbMaxPrice" Width="70" Tag="До" TextChanged="PriceFilter_TextChanged"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Список товаров -->
+            <Border Grid.Column="1" Background="#FF7174B9" CornerRadius="10" Padding="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView x:Name="lvProducts">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="250" Height="400" Margin="5" Background="#697E50"
+                                        CornerRadius="10" Padding="10">
+                                    <StackPanel>
+                                        <Border CornerRadius="5" BorderThickness="1" BorderBrush="#20331B">
+                                            <Image Source="{Binding image}" Height="180" Stretch="UniformToFill"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding wear.name}" FontWeight="Bold" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding department.name}" FontStyle="Italic" Foreground="#FFDDDDDD"/>
+                                        <TextBlock Text="{Binding brand.name}" FontStyle="Italic" Foreground="#FFDDDDDD"/>
+                                        <TextBlock Text="{Binding category.name}" Foreground="#FFDDDDDD"/>
+                                        <TextBlock Text="{Binding size.name, StringFormat={}Размер: {0}}" Foreground="#FFDDDDDD"/>
+                                        <TextBlock Text="{Binding colour.name, StringFormat={}Цвет: {0}}" Foreground="#FFDDDDDD"/>
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:N} ₽}" Foreground="#20331B" FontWeight="Bold" Margin="0,5,0,0"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                            <Button Content="В избранное" Width="100" Margin="0,0,5,0"
+                                                    Click="BtnFavourites_Click" Tag="{Binding productID}"/>
+                                            <Button Content="В корзину" Width="100"
+                                                    Click="BtnAddToCart_Click" Tag="{Binding productID}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

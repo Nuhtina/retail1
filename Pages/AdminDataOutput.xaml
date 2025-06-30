@@ -1,0 +1,107 @@
+﻿<Page x:Class="retail.Pages.AdminDataOutput"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:retail.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="AdminDataOutput">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="51*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="91*"/>
+            <RowDefinition Height="489*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#FF7174B9" Padding="10" CornerRadius="10" Grid.ColumnSpan="2" Margin="0,0,0,51" Grid.RowSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Склад" Click="BtnWarehouse_Click" Background="#FF2F3A6E" Foreground="#FFDDDDDD"/>
+                <Button Content="Продажи" Click="BtnSales_Click" Background="#FF2F3A6E" Foreground="#FFDDDDDD"/>
+                <Button Content="Заказы" Click="BtnOrders_Click" Background="#FF2F3A6E" Foreground="#FFDDDDDD"/>
+                <Button Content="Пользователи" Click="BtnUsers_Click" Background="#FF2F3A6E" Foreground="#FFDDDDDD"/>
+                <Button Content="Выйти" Click="BtnLogout_Click" Background="#FF2F3A6E" Foreground="#FFDDDDDD"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,10,0,0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
+                <Button Content="Добавить" Click="BtnAdd_Click" Background="#FFABC4E6" Foreground="#FF2F3A6E"/>
+                <Button Content="Редактировать" Click="BtnEdit_Click" 
+                        IsEnabled="{Binding ElementName=lvProducts, Path=SelectedItems.Count}" Background="#FFABC4E6" Foreground="#FF2F3A6E"/>
+                <Button Content="Удалить" Click="BtnDelete_Click" 
+                        IsEnabled="{Binding ElementName=lvProducts, Path=SelectedItems.Count}" Background="#FFABC4E6" Foreground="#FF2F3A6E"/>
+                <Button Content="Экспорт" Click="BtnExport_Click" Background="#FFABC4E6" Foreground="#FF2F3A6E"/>
+                <Button Content="Назад" Click="BtnRefresh_Click"  ToolTip="Обновить" FontSize="12" Foreground="#FF2F3A6E" Background="#FFABC4E6"/>
+            </StackPanel>
+
+            <ListView x:Name="lvProducts" Grid.Row="1" ToolTip="Список доступных товаров">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="500"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Source="{Binding image}"></Image>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5" Grid.Column="1">
+                                    <TextBlock Width="auto" TextWrapping="Wrap" Height="auto" Text="{Binding wear.name}" FontWeight="Bold" FontSize="16" Foreground="#FF0027FF"/>
+                                    <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                                    <Run Text="Отдел: "/>
+                                    <Run Text="{Binding department.name}"/>
+                                    <Run Text="Категория: "/>
+                                    <Run Text="{Binding category.name}"/>
+                                    </TextBlock>
+                                    <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                                    <Run Text="Бренд: "/>
+                                    <Run Text="{Binding brand.name}"/>
+                                    <Run Text="Страна: "/>
+                                    <Run Text="{Binding country.name}"/>
+                                    </TextBlock>
+                                    <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                                    <Run Text="Материал: "/>
+                                    <Run Text="{Binding material.name}"/>
+                                    <Run Text="Застежка: "/>
+                                    <Run Text="{Binding fastener.Name}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Grid.Column="2" Margin="5">
+                                    <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+
+                                    <Run Text="Цвет: "/>
+                                    <Run Text="{Binding colour.Name}"/>
+                                    <Run Text="Размер: "/>
+                                    <Run Text="{Binding size.Name}"/>
+                                    </TextBlock>
+                                    <Button Content="Редактировать" Width="120" Height="20" Click="EditButton_Click" ToolTip="Редактировать товар" HorizontalAlignment="Left"/>
+
+                                </StackPanel>
+                            </Grid>
+                        </WrapPanel>
+                        <!--<GridViewColumn Header="Тип одежды" DisplayMemberBinding="{Binding wear.Name}" Width="120"/>
+                        <GridViewColumn Header="Отдел" DisplayMemberBinding="{Binding department.Name}" Width="100"/>
+                        <GridViewColumn Header="Категория" DisplayMemberBinding="{Binding category.Name}" Width="100"/>
+                        <GridViewColumn Header="Бренд" DisplayMemberBinding="{Binding brand.Name}" Width="100"/>
+                        <GridViewColumn Header="Страна" DisplayMemberBinding="{Binding country.Name}" Width="100"/>
+                        <GridViewColumn Header="Материал" DisplayMemberBinding="{Binding material.Name}" Width="100"/>
+                        <GridViewColumn Header="Застежка" DisplayMemberBinding="{Binding fastener.Name}" Width="100"/>
+                        <GridViewColumn Header="Цвет" DisplayMemberBinding="{Binding colour.Name}" Width="80"/>
+                        <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding size.Name}" Width="80"/>-->
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>
