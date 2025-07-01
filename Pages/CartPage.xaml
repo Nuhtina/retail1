@@ -9,6 +9,45 @@
       Title="CartPage">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#FF7174B9" Padding="10" CornerRadius="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="🏠 Главная" Click="BtnMain_Click" Width="120" Height="30" IsEnabled="False" Foreground="#FF2F3A6E"/>
+                <Button Content="★ Избранное" Click="BtnFavorites_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="📝 Мои заказы" Click="BtnUserOrders_Click" Width="120" Foreground="#FF2F3A6E"/>
+                <Button Content="Выйти" Click="BtnLogout_Click" Width="120" Foreground="#FF2F3A6E"/>
+            </StackPanel>
+        </Border>
+        <ListView x:Name="lvCartItems" Grid.Row="1" ToolTip="Корзина">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="200"/>
+
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Row="1">
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto" Text="{Binding cart.userID}"/>
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                        <Run Text="Одежда: "/>
+                        <Run Text="{Binding cart.productID}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Row="1">
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                        <Run Text="Количество: "/>
+                        <Run Text="{Binding wear.name}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

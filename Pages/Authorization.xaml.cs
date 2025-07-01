@@ -1,4 +1,5 @@
-﻿using System;
+﻿using retail.AppData;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -39,29 +40,26 @@ namespace retail.Pages
 
             try
             {
-                using (var context = new saleEntities())
-                {
-                    var user = context.users
-                        .FirstOrDefault(u => u.email == tbLogin.Text && u.password == pbPassword.Password);
+                var userObj = AppData.AppConnect.model2.users.FirstOrDefault(u => u.email == tbLogin.Text && u.password == pbPassword.Password);
 
-                    if (user == null)
+                    if (userObj == null)
                     {
                         ShowError("Неверный email или пароль");
                         return;
                     }
 
-                    CurrentUser.User = user;
+                    //CurrentUser.User = user;
 
-                    // Перенаправление в зависимости от роли
-                    if (user.roleID == 1) // Администратор
+                    if (userObj.roleID == 1) // Администратор
                     {
                         NavigationService.Navigate(new AdminDataOutput());
                     }
                     else // Обычный пользователь
                     {
+                        MessageBox.Show("Здравствуйте, пользователь " + userObj.surname + "!", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
+                        AppConnect.UserID = userObj.userID;
                         NavigationService.Navigate(new UserDataOutput());
                     }
-                }
             }
             catch (Exception ex)
             {

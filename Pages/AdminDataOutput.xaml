@@ -85,7 +85,7 @@
                                     <Run Text="Размер: "/>
                                     <Run Text="{Binding size.Name}"/>
                                     </TextBlock>
-                                    <Button Content="Редактировать" Width="120" Height="20" Click="EditButton_Click" ToolTip="Редактировать товар" HorizontalAlignment="Left"/>
+                                    <Button Content="Редактировать" Width="120" Height="20" Click="BtnEdit_Click" ToolTip="Редактировать товар" HorizontalAlignment="Left"/>
 
                                 </StackPanel>
                             </Grid>

@@ -16,6 +16,7 @@ namespace retail
     {
         public product()
         {
+            this.cart = new HashSet<cart>();
             this.sales = new HashSet<sales>();
             this.warehouse = new HashSet<warehouse>();
             this.zakaz = new HashSet<zakaz>();
@@ -35,6 +36,7 @@ namespace retail
         public int price { get; set; }
     
         public virtual brand brand { get; set; }
+        public virtual ICollection<cart> cart { get; set; }
         public virtual category category { get; set; }
         public virtual colour colour { get; set; }
         public virtual country country { get; set; }

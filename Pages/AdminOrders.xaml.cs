@@ -25,46 +25,41 @@ namespace retail.Pages
         {
             InitializeComponent();
 
-            dpFromDate.SelectedDate = DateTime.Today.AddDays(-7);
+            orderDate.SelectedDate = DateTime.Today.AddDays(-7);
             dpToDate.SelectedDate = DateTime.Today;
 
-            cbStatusFilter.ItemsSource = AppConnect.model1.status.ToList();
+            cbStatusFilter.ItemsSource = AppConnect.model2.status.ToList();
             cbStatusFilter.DisplayMemberPath = "name";
             cbStatusFilter.SelectedValuePath = "statusID";
             cbStatusFilter.SelectedIndex = 0;
 
-            var statuses = AppConnect.model1.status.ToList();
+            var statuses = AppConnect.model2.status.ToList();
             dgOrders.Tag = new { Statuses = statuses };
 
-            LoadOrders();
+            LoadZakaz();
         }
 
-        private void LoadOrders()
+        private void LoadZakaz()
         {
             try
             {
-                var ordersQuery = AppConnect.model1.zakaz
+                var ordersQuery = AppConnect.model2.zakaz
                     .Include("users")
-                    .OrderByDescending(o => o.zakazID)
+                    .OrderByDescending(z => z.zakazID)
                     .AsQueryable();
 
                 if (cbStatusFilter.SelectedIndex > 0 && cbStatusFilter.SelectedItem is status selectedStatus)
                 {
-                    ordersQuery = ordersQuery.Where(o => o.statusID == selectedStatus.statusID);
+                    ordersQuery = ordersQuery.Where(z => z.statusID == selectedStatus.statusID);
                 }
 
-                if (dpFromDate.SelectedDate != null)
+                if (orderDate.SelectedDate != null)
                 {
-                    ordersQuery = ordersQuery.Where(o => o.zakazID >= dpFromDate.SelectedDate);
+                    ordersQuery = ordersQuery.Where(z => z.orderDate >= orderDate.SelectedDate);
                 }
 
-                if (dpToDate.SelectedDate != null)
-                {
-                    var endDate = dpToDate.SelectedDate.Value.AddDays(1);
-                    ordersQuery = ordersQuery.Where(o => o.zakazID < endDate);
-                }
 
-                dgOrders.ItemsSource = ordersQuery.ToList();
+                zakaz.ItemsSource = ordersQuery.ToList();
             }
             catch (Exception ex)
             {
@@ -75,7 +70,7 @@ namespace retail.Pages
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            LoadOrders();
+            LoadZakaz();
         }
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -89,13 +84,13 @@ namespace retail.Pages
                 {
                     foreach (var item in dgOrders.SelectedItems.Cast<zakaz>())
                     {
-                        AppConnect.model1.zakaz.Remove(item);
+                        AppConnect.model2.zakaz.Remove(item);
                     }
 
                     try
                     {
-                        AppConnect.model1.SaveChanges();
-                        LoadOrders();
+                        AppConnect.model2.SaveChanges();
+                        LoadZakaz();
                     }
                     catch (Exception ex)
                     {
@@ -114,12 +109,12 @@ namespace retail.Pages
             {
                 try
                 {
-                    var order = AppConnect.model1.zakaz.FirstOrDefault(o => o.zakazID == orderId);
+                    var order = AppConnect.model2.zakaz.FirstOrDefault(z => z.zakazID == orderId);
                     if (order != null)
                     {
                         order.statusID = selectedStatus.statusID;
-                        AppConnect.model1.SaveChanges();
-                        LoadOrders();
+                        AppConnect.model2.SaveChanges();
+                        LoadZakaz();
                     }
                 }
                 catch (Exception ex)
@@ -132,20 +127,20 @@ namespace retail.Pages
 
         private void CbStatusFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LoadOrders();
+            LoadZakaz();
         }
 
         private void ApplyFilters_Click(object sender, RoutedEventArgs e)
         {
-            LoadOrders();
+            LoadZakaz();
         }
 
         private void ResetFilters_Click(object sender, RoutedEventArgs e)
         {
             cbStatusFilter.SelectedIndex = 0;
-            dpFromDate.SelectedDate = DateTime.Today.AddDays(-7);
+            orderDate.SelectedDate = DateTime.Today.AddDays(-7);
             dpToDate.SelectedDate = DateTime.Today;
-            LoadOrders();
+            LoadZakaz();
         }
 
         private void BtnMain_Click(object sender, RoutedEventArgs e)

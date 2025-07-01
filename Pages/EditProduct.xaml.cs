@@ -3,6 +3,7 @@ using retail.AppData;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.Windows.Shapes.Path;
 
 namespace retail.Pages
 {
@@ -24,83 +26,166 @@ namespace retail.Pages
     /// </summary>
     public partial class EditProduct : Page
     {
-        private Product product;
+        private product Product;
         public event Action ProductUpdated;
 
-        public EditProduct(Product product)
+        public EditProduct(product product)
         {
             InitializeComponent();
-            this.product = product ?? throw new ArgumentNullException(nameof(product));
+            this.Product = product ?? throw new ArgumentNullException(nameof(product));
 
-            EditProductName.Text = product.name;
-            EditDescription.Text = product.description;
-            EditPrice.Text = product.price.ToString();
+            cbWearType.Text = product.wear.name;
+            cbDepartment.Text = product.department.name;
+            cbCategory.Text = product.category.name;
+            cbBrand.Text = product.brand.name;
+            cbCountry.Text = product.country.name;
+            cbMaterial.Text = product.material.name;
+            cbFastener.Text = product.fastener.name;
+            cbColour.Text = product.colour.name;
+            cbSize.Text = product.size.name;
+            tbPrice.Text = product.price.ToString();
 
+            LoadWears();
+            LoadDeparts();
+            LoadCategorys();
             LoadBrands();
-            LoadCategories();
+            LoadCountrys();
             LoadMaterials();
+            LoadFasteners();
+            LoadColours();
+            LoadSizes();
 
-            EditBrand.SelectedItem = product.Brand;
-            EditCategory.SelectedItem = product.Category;
-            EditMaterial.SelectedItem = product.Material;
+            cbWearType.SelectedItem = product.wear;
+            cbDepartment.SelectedItem = product.department;
+            cbCategory.SelectedItem = product.category;
+            cbBrand.SelectedItem = product.brand;
+            cbCountry.SelectedItem = product.country;
+            cbMaterial.SelectedItem = product.material;
+            cbFastener.SelectedItem = product.fastener;
+            cbColour.SelectedItem = product.colour;
+            cbSize.SelectedItem = product.size;
         }
 
         public EditProduct()
         {
             InitializeComponent();
-            product = new product();
+            Product = new product();
 
+            LoadWears();
+            LoadDeparts();
+            LoadCategorys();
             LoadBrands();
-            LoadCategories();
+            LoadCountrys();
             LoadMaterials();
+            LoadFasteners();
+            LoadColours();
+            LoadSizes();
         }
 
+        private void LoadWears()
+        {
+            var wears = AppConnect.model2.wear.ToList();
+            cbWearType.ItemsSource = wears;
+            cbWearType.DisplayMemberPath = "name";
+        }
+        private void LoadDeparts()
+        {
+            var departs = AppConnect.model2.department.ToList();
+            cbDepartment.ItemsSource = departs;
+            cbDepartment.DisplayMemberPath = "name";
+        }
+
+        private void LoadCategorys()
+        {
+            var categories = AppConnect.model2.category.ToList();
+            cbCategory.ItemsSource = categories;
+            cbCategory.DisplayMemberPath = "name";
+        }
         private void LoadBrands()
         {
-            var brands = AppConnect.model1.brand.ToList();
-            EditBrand.ItemsSource = brands;
-            EditBrand.DisplayMemberPath = "name";
+            var brands = AppConnect.model2.brand.ToList();
+            cbBrand.ItemsSource = brands;
+            cbBrand.DisplayMemberPath = "name";
         }
-
-        private void LoadCategories()
+        private void LoadCountrys()
         {
-            var categories = AppConnect.model1.category.ToList();
-            EditCategory.ItemsSource = categories;
-            EditCategory.DisplayMemberPath = "name";
+            var countrys = AppConnect.model2.country.ToList();
+            cbCountry.ItemsSource = countrys;
+            cbCountry.DisplayMemberPath = "name";
         }
 
         private void LoadMaterials()
         {
-            var materials = AppConnect.model1.material.ToList();
-            EditMaterial.ItemsSource = materials;
-            EditMaterial.DisplayMemberPath = "name";
+            var materials = AppConnect.model2.material.ToList();
+            cbMaterial.ItemsSource = materials;
+            cbMaterial.DisplayMemberPath = "name";
+        }
+
+        private void LoadFasteners()
+        {
+            var fasteners = AppConnect.model2.fastener.ToList();
+            cbFastener.ItemsSource = fasteners;
+            cbFastener.DisplayMemberPath = "name";
+        }
+
+        private void LoadColours()
+        {
+            var colours = AppConnect.model2.colour.ToList();
+            cbColour.ItemsSource = colours;
+            cbColour.DisplayMemberPath = "name";
+        }
+        private void LoadSizes()
+        {
+            var sizes = AppConnect.model2.size.ToList();
+            cbSize.ItemsSource = sizes;
+            cbSize.DisplayMemberPath = "name";
         }
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            product.name = EditProductName.Text;
-            product.description = EditDescription.Text;
-            product.Brand = (Brand)EditBrand.SelectedItem;
-            product.Category = (Category)EditCategory.SelectedItem;
-            product.Material = (Material)EditMaterial.SelectedItem;
+            product product1 = new product();
+            //product.name = EditProductName.Text;
+            //product.description = EditDescription.Text;
+            //product1.wears = (wear)cbWearType.SelectedItem;
+            //product.departments = (department)cbDepartment.SelectedItem;
+            //product.category = (category)cbCategory.SelectedItem;
+            //product.brand = (brand)cbBrand.SelectedItem;
+            //product.country = (country)cbCountry.SelectedItem;
+            //product.material = (material)cbMaterial.SelectedItem;
+            //product.fasteners = (fastener)cbFastener.SelectedItem;
+            //product.colour = (colour)cbColour.SelectedItem;
+            //product.size = (size)cbSize.SelectedItem;
 
-            if (!decimal.TryParse(EditPrice.Text, out decimal price) || price <= 0)
+            if (product1.productID == 0)
+            {
+                product1.wearID = AppData.AppConnect.model2.wear.FirstOrDefault(wear => wear.name == cbWearType.Text).wearID;
+                product1.departID = AppData.AppConnect.model2.department.FirstOrDefault(department => department.name == cbDepartment.Text).departID;
+                product1.categoryID = AppData.AppConnect.model2.category.FirstOrDefault(category => category.name == cbCategory.Text).categoryID;
+                product1.brandID = AppData.AppConnect.model2.brand.FirstOrDefault(brand => brand.name == cbBrand.Text).brandID;
+                product1.countryID = AppData.AppConnect.model2.country.FirstOrDefault(country => country.name == cbCountry.Text).countryID;
+                product1.materialID = AppData.AppConnect.model2.material.FirstOrDefault(material => material.name == cbMaterial.Text).materialID;
+                product1.fastenerID = AppData.AppConnect.model2.fastener.FirstOrDefault(fastener => fastener.name == cbFastener.Text).fastenerID;
+                product1.colourID = AppData.AppConnect.model2.colour.FirstOrDefault(colour => colour.name == cbColour.Text).colourID;
+                product1.sizeID = AppData.AppConnect.model2.size.FirstOrDefault(size => size.name == cbSize.Text).sizeID;
+            }
+
+            if (!decimal.TryParse(tbPrice.Text, out decimal price) || price <= 0)
             {
                 MessageBox.Show("Пожалуйста, введите корректную цену.");
                 return;
             }
-            product.price = price;
+            product1.price = (int)price;
 
-            if (product.productID == 0)
+            if (product1.productID == 0)
             {
-                AppConnect.model1.product.Add(product);
+                AppConnect.model2.product.Add(product1);
             }
             else
             {
-                AppConnect.model1.Entry(product).State = EntityState.Modified;
+                AppConnect.model2.Entry(product1).State = EntityState.Modified;
             }
 
-            AppConnect.model1.SaveChanges();
+            AppConnect.model2.SaveChanges();
             ProductUpdated?.Invoke();
             NavigationService.GoBack();
         }
@@ -117,32 +202,14 @@ namespace retail.Pages
             }
         }
 
-        private void LoadImageButton(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var dialog = new OpenFileDialog();
-                dialog.InitialDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\Images"));
+            NavigationService.Navigate(new AdminDataOutput());
+        }
 
-                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|All Files|*.*";
-                dialog.Title = "Выберите изображение";
-
-                if (dialog.ShowDialog() == true)
-                {
-                    string photoName = System.IO.Path.GetFileName(dialog.FileName);
-                    product.image = photoName;
-                    MessageBox.Show("Изображение загружено: " + photoName, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Изображение не выбрано.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка при загрузке изображения: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            AppConnect.model2.SaveChanges();
         }
     }
-
 }

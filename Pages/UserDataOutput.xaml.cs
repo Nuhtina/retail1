@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace retail.Pages
         private ObservableCollection<product> _allProducts;
         private ObservableCollection<category> _categories;
         private ObservableCollection<brand> _brands;
+        private product sdProduct;
 
         public UserDataOutput()
         {
@@ -37,13 +39,13 @@ namespace retail.Pages
             try
             {
                 // Загрузка всех товаров
-                _allProducts = new ObservableCollection<product>(AppConnect.model1.product.ToList());
+                _allProducts = new ObservableCollection<product>(AppConnect.model2.product.ToList());
                 lvProducts.ItemsSource = _allProducts;
 
                 // Категории (с "Все категории")
                 _categories = new ObservableCollection<category>(
                     new[] { new category { categoryID = 0, name = "Все категории" } }
-                    .Concat(AppConnect.model1.category.ToList())
+                    .Concat(AppConnect.model2.category.ToList())
                 );
                 cbCategories.ItemsSource = _categories;
                 cbCategories.DisplayMemberPath = "Name";
@@ -52,7 +54,7 @@ namespace retail.Pages
                 // Бренды (с "Все бренды")
                 _brands = new ObservableCollection<brand>(
                     new[] { new brand { brandID = 0, name = "Все бренды" } }
-                        .Concat(AppConnect.model1.brand.ToList())
+                        .Concat(AppConnect.model2.brand.ToList())
                 );
                 cbBrands.ItemsSource = _brands;
                 cbBrands.DisplayMemberPath = "Name";
@@ -102,11 +104,11 @@ namespace retail.Pages
                 filtered = filtered.Where(p => p.price <= maxPrice);
             }
 
-            // Поиск по названию (например, по полю Image или другой строке)
-            if (!string.IsNullOrWhiteSpace(tbSearch.Text))
-            {
-                filtered = filtered.Where(p => p.image != null && p.image.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
-            }
+            //// Поиск по названию (например, по полю Image или другой строке)
+            //if (!string.IsNullOrWhiteSpace(tbSearch.Text))
+            //{
+            //    filtered = filtered.Where(p => p.image != null && p.image.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            //}
 
             // Сортировка
             switch (cbSort.SelectedItem?.ToString())
@@ -130,15 +132,16 @@ namespace retail.Pages
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            CurrentUser.users = null;
+            //int currentUser = AppConnect.model1.users.userID;
+            //currentUser.users = null;
             NavigationService.Navigate(new Authorization());
         }
 
         private void BtnDetails_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is int productId)
+            if (sender is Button btn && btn.Tag is int productID)
             {
-                NavigationService.Navigate(new ProductDetailsPage(productId));
+                NavigationService.Navigate(new ProductDetailsPage());
             }
         }
 
@@ -151,7 +154,7 @@ namespace retail.Pages
                     var product = _allProducts.FirstOrDefault(p => p.productID == productId);
                     if (product != null)
                     {
-                        MessageBox.Show($"{product.image} добавлен в корзину", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"{product.wear.name} добавлен в корзину", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                         // Добавьте свою логику корзины здесь
                     }
                 }
@@ -165,6 +168,67 @@ namespace retail.Pages
         private void BtnUserOrders_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new UserOrders());
+        }
+
+        private void BtnMain_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new UserDataOutput());
+        }
+
+        private void BtnFavorites_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new PageLike());
+        }
+
+        private void BtnCart_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new CartPage());
+        }
+
+        private void BtnAccount_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new AccountPage());
+        }
+
+        private void BtnFavourites_Click(object sender, RoutedEventArgs e)
+        {
+            sdProduct = lvProducts.SelectedItem as product;
+
+            if (sdProduct == null)
+            {
+                MessageBox.Show("Выберите вещь!");
+                return;
+            }
+
+            try
+            {
+                int currentUserId = AppConnect.UserID;
+
+                var existingLike = AppConnect.model2.favourites
+                    .FirstOrDefault(f => f.userID == currentUserId
+                                       && f.productID == sdProduct.productID);
+                if (existingLike != null)
+                {
+                    MessageBox.Show("Эта вещь уже в избранном!");
+                    return;
+                }
+
+                var newLike = new favourites
+                {
+                    userID = currentUserId,
+                    productID = sdProduct.productID
+                };
+
+                AppConnect.model2.favourites.Add(newLike);
+                AppConnect.model2.SaveChanges();
+                MessageBox.Show(" добавлен в избранное!");
+                MessageBox.Show("Вещь добавлена в избранное!");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ERROR: {ex}\n{ex.StackTrace}");
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
         }
     }
 }

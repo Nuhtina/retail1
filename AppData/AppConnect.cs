@@ -8,6 +8,7 @@ namespace retail.AppData
 {
     internal class AppConnect
     {
-        public static saleEntities model1;
+        public static saleEntities1 model2;
+        public static int UserID;
     }
 }

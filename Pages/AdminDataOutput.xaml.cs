@@ -1,4 +1,5 @@
-﻿using retail.AppData;
+﻿using Microsoft.Win32;
+using retail.AppData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,12 +23,12 @@ namespace retail.Pages
     /// </summary>
     public partial class AdminDataOutput : Page
     {
-        public IEnumerable ProductList { get; private set; }
+        List<product> itemlog;
 
         public AdminDataOutput()
         {
             InitializeComponent();
-            lvProducts.ItemsSource = ProductList;
+
             LoadProducts();
         }
 
@@ -35,15 +36,12 @@ namespace retail.Pages
         {
             try
             {
-                var list = AppConnect.model1.product
-                    .Include(p => p.Category)
-                    .Include(p => p.Brand)
-                    .Include(p => p.Wear)
-                    .ToList();
-
-                ProductList.Clear();
-                foreach (var item in list)
-                    ProductList.Add(item);
+                //var list = AppConnect.model1.product;
+                //ProductList.Clear();
+                //foreach (var item in list)
+                //    ProductList.Add(item);
+                itemlog = AppConnect.model2.product.ToList();
+                lvProducts.ItemsSource = itemlog;
             }
             catch (Exception ex)
             {
@@ -84,28 +82,57 @@ namespace retail.Pages
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
+            //if (lvProducts.SelectedItem is product selected)
+            //{
+            //    var result = MessageBox.Show($"Вы уверены, что хотите удалить товар '{selected.name}'?",
+            //        "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            //    if (result == MessageBoxResult.Yes)
+            //    {
+            //        try
+            //        {
+            //            // Удаляем связанные записи из склада и продаж
+            //            var warehouseItems = AppConnect.model1.warehouse
+            //                .Where(w => w.productID == selected.wearID)
+            //                .ToList();
+
+            //            //var salesItems = AppConnect.model1.sales
+            //            //    .Where(s => s.productID == selected.wearID)
+            //            //    .ToList();
+
+            //            AppConnect.model1.warehouse.Remove(warehouseItems);
+            //            //AppConnect.model1.sales.RemoveRange(salesItems);
+            //            AppConnect.model1.product.Remove(selected);
+            //            AppConnect.model1.SaveChanges();
+
+            //            LoadProducts();
+            //            MessageBox.Show("Товар успешно удален", "Успех",
+            //                MessageBoxButton.OK, MessageBoxImage.Information);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+            //                MessageBoxButton.OK, MessageBoxImage.Error);
+            //        }
+            //    }
+            //}
             if (lvProducts.SelectedItem is product selected)
             {
-                var result = MessageBox.Show($"Вы уверены, что хотите удалить товар '{selected.name}'?",
+                var result = MessageBox.Show($"Вы уверены, что хотите удалить товар '{selected.productID}'?",
                     "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     try
                     {
-                        // Удаляем связанные записи из склада и продаж
-                        var warehouseItems = AppConnect.model1.warehouse
-                            .Where(w => w.productID == selected.productID)
-                            .ToList();
+                        // Удаляем связанные записи из склада
+                        //warehouse warehouseItems = AppConnect.model1.warehouse
+                        //    .Where(w => w.productID == selected.productID).
+                        //    ;
 
-                        var salesItems = AppConnect.model1.sales
-                            .Where(s => s.productID == selected.productID)
-                            .ToList();
-
-                        AppConnect.model1.warehouse.RemoveRange(warehouseItems);
-                        AppConnect.model1.sales.RemoveRange(salesItems);
-                        AppConnect.model1.product.Remove(selected);
-                        AppConnect.model1.SaveChanges();
+                        //AppConnect.model1.warehouse.Remove(warehouseItems);
+                        AppConnect.model2.product.Remove(selected);
+                        AppConnect.model2.SaveChanges();
 
                         LoadProducts();
                         MessageBox.Show("Товар успешно удален", "Успех",
@@ -118,6 +145,11 @@ namespace retail.Pages
                     }
                 }
             }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите товар для удаления", "Предупреждение",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
@@ -129,11 +161,13 @@ namespace retail.Pages
         {
             try
             {
-                lvProducts.ItemsSource = AppConnect.model1.product
-                    .Include(p => p.Category)
-                    .Include(p => p.Brand)
-                    .Include(p => p.Wear)
-                    .ToList();
+                //lvProducts.ItemsSource = AppConnect.model1.product
+                //    .Include(p => p.Category)
+                //    .Include(p => p.Brand)
+                //    .Include(p => p.Wear)
+                //    .ToList();
+                List<product> itemlog = AppConnect.model2.product.ToList();
+                lvProducts.ItemsSource = itemlog;
             }
             catch (Exception ex)
             {
@@ -149,16 +183,16 @@ namespace retail.Pages
 
         private void BtnExport_Click(object sender, RoutedEventArgs e)
         {
-            if (ProductList == null || ProductList.Count == 0)
+            if (itemlog == null || itemlog.Count == 0)
             {
                 MessageBox.Show("Нет данных для экспорта", "Экспорт", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            ExportToCsv(ProductList.ToList());
+            ExportToCsv(itemlog.ToList());
         }
 
-        private void ExportToCsv(List<Product> items)
+        private void ExportToCsv(List<product> items)
         {
             try
             {
@@ -177,14 +211,14 @@ namespace retail.Pages
 
                     foreach (var item in items)
                     {
-                        string wearName = item.Wear != null ? item.Wear.Name : "";
-                        string categoryName = item.Category != null ? item.Category.Name : "";
-                        string brandName = item.Brand != null ? item.Brand.Name : "";
-                        string materialName = item.Material != null ? item.Material.Name : "";
-                        string colourName = item.Colour != null ? item.Colour.Name : "";
-                        string sizeName = item.Size != null ? item.Size.Name : "";
+                        string wearName = item.wear != null ? item.wear.name : "";
+                        string categoryName = item.category != null ? item.category.name : "";
+                        string brandName = item.brand != null ? item.brand.name : "";
+                        string materialName = item.material != null ? item.material.name : "";
+                        string colourName = item.colour != null ? item.colour.name : "";
+                        string sizeName = item.size != null ? item.size.name : "";
 
-                        sb.AppendLine($"{item.ProductID};{item.Name};{wearName};{categoryName};{brandName};{materialName};{colourName};{sizeName}");
+                        sb.AppendLine($"{item.productID};{wearName};{categoryName};{brandName};{materialName};{colourName};{sizeName}");
                     }
 
                     System.IO.File.WriteAllText(saveDialog.FileName, sb.ToString(), Encoding.UTF8);
@@ -196,6 +230,11 @@ namespace retail.Pages
             {
                 MessageBox.Show("Ошибка при экспорте: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+        }
+
+        private void BtnSales_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }

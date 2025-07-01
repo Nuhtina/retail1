@@ -16,6 +16,8 @@ namespace retail
     {
         public users()
         {
+            this.cart = new HashSet<cart>();
+            this.favourites = new HashSet<favourites>();
             this.zakaz = new HashSet<zakaz>();
         }
     
@@ -28,6 +30,8 @@ namespace retail
         public string password { get; set; }
         public int roleID { get; set; }
     
+        public virtual ICollection<cart> cart { get; set; }
+        public virtual ICollection<favourites> favourites { get; set; }
         public virtual role role { get; set; }
         public virtual ICollection<zakaz> zakaz { get; set; }
     }

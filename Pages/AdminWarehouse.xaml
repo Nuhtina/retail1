@@ -8,39 +8,46 @@
       d:DesignHeight="600" d:DesignWidth="800"
       Title="AdminWarehouse">
     <Grid>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="200"/>
-            </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#FF7174B9" Padding="10" CornerRadius="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Склад" Click="BtnWarehouse_Click" Background="#FF302F38" Foreground="#FFABC4E6" />
+                <Button Content="Продажи" Click="BtnSales_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
+                <Button Content="Заказы" Click="BtnOrders_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
+                <Button Content="Пользователи" Click="BtnUsers_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
+                <Button Content="Выйти" Click="BtnLogout_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
+            </StackPanel>
+        </Border>
+        <ListView x:Name="lvWarehouse" Grid.Row="1" ToolTip="Количество товара на складе">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="200"/>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Border Grid.Row="0" Background="#FF7174B9" Padding="10" CornerRadius="10">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="Склад" Click="BtnWarehouse_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
-                    <Button Content="Продажи" Click="BtnSales_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
-                    <Button Content="Заказы" Click="BtnOrders_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
-                    <Button Content="Пользователи" Click="BtnUsers_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
-                    <Button Content="Выйти" Click="BtnLogout_Click" Background="#FF302F38" Foreground="#FFABC4E6" Margin="5"/>
-                </StackPanel>
-            </Border>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Column="0">
-                <TextBlock Width="auto" TextWrapping="Wrap" Height="auto" Text="{Binding product.productID}"/>
-                <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
-                <Run Text="Одежда: "/>
-                <Run Text="{Binding wear.name}"/>
-                </TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Column="1">
-                <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
-            <Run Text="Количество: "/>
-            <Run Text="{Binding warehouse.quantity}"/>
-                </TextBlock>
-            </StackPanel>
-        </ScrollViewer>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Row="1">
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto" Text="{Binding product.productID}"/>
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                            <Run Text="Одежда: "/>
+                            <Run Text="{Binding wear.name}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="left" Margin="5" Grid.Row="1">
+                            <TextBlock Width="auto" TextWrapping="Wrap" Height="auto">
+                            <Run Text="Количество: "/>
+                            <Run Text="{Binding warehouse.quantity}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

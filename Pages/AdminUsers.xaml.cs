@@ -34,11 +34,11 @@ namespace retail.Pages
         private void LoadData()
         {
             // Загрузка пользователей
-            var users = AppConnect.model1.users.ToList();
+            var users = AppConnect.model2.users.ToList();
             lvUsers.ItemsSource = users;
 
             // Загрузка ролей
-            Roles = AppConnect.model1.role.ToList();
+            Roles = AppConnect.model2.role.ToList();
         }
 
         private void RoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -49,13 +49,13 @@ namespace retail.Pages
                 int userId = (int)comboBox.Tag;
                 int newRoleId = ((role)e.AddedItems[0]).roleID;
 
-                var user = AppConnect.model1.users.FirstOrDefault(u => u.userID == userId);
+                var user = AppConnect.model2.users.FirstOrDefault(u => u.userID == userId);
                 if (user != null)
                 {
                     user.roleID = newRoleId;
                     try
                     {
-                        AppConnect.model1.SaveChanges();
+                        AppConnect.model2.SaveChanges();
                         MessageBox.Show("Роль пользователя успешно изменена", "Успех",
                             MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -80,15 +80,15 @@ namespace retail.Pages
                     try
                     {
                         // Удаляем связанные записи
-                        var cart = AppConnect.model1.cart.FirstOrDefault(c => c.UserId == selectedUser.userID);
-                        if (cart != null) AppConnect.model1.cart.Remove(cart);
+                        var cart = AppConnect.model2.cart.FirstOrDefault(c => c.userID == selectedUser.userID);
+                        if (cart != null) AppConnect.model2.cart.Remove(cart);
 
-                        var favorites = AppConnect.model1.favorites.Where(f => f.UserId == selectedUser.userID).ToList();
-                        AppConnect.model1.favorites.RemoveRange(favorites);
+                        var favorites = AppConnect.model2.favourites.Where(favourites => favourites.userID == selectedUser.userID).ToList();
+                        //AppConnect.model1.favourites.Remove(favorites);
 
                         // Удаляем пользователя
-                        AppConnect.model1.users.Remove(selectedUser);
-                        AppConnect.model1.SaveChanges();
+                        AppConnect.model2.users.Remove(selectedUser);
+                        AppConnect.model2.SaveChanges();
 
                         // Обновляем список
                         LoadData();
@@ -133,7 +133,7 @@ namespace retail.Pages
 
         private void BtnSessions_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new AdminSchedule());
+            NavigationService?.Navigate(new AdminDataOutput());
         }
     }
 }

@@ -47,9 +47,9 @@ namespace retail.Pages
             if (CurrentUser.User == null) return;
 
             // Получаем избранные товары пользователя
-            var favorites = AppConnect.model1.zakaz
+            var favorites = AppConnect.model2.zakaz
                 .Where(z => z.userID == CurrentUser.User.userID && z.statusID == 1) // statusID=1 для избранного (предположение)
-                .Join(AppConnect.model1.product,
+                .Join(AppConnect.model2.product,
                     z => z.productID,
                     p => p.productID,
                     (z, p) => p)
@@ -69,7 +69,7 @@ namespace retail.Pages
             int productId = (int)button.CommandParameter;
 
             // Находим запись в заказах (избранном)
-            var favorite = AppConnect.model1.zakaz
+            var favorite = AppConnect.model2.zakaz
                 .FirstOrDefault(z => z.userID == CurrentUser.User.userID &&
                                     z.productID == productId &&
                                     z.statusID == 1); // statusID=1 для избранного
@@ -79,8 +79,8 @@ namespace retail.Pages
                 try
                 {
                     // Удаляем из избранного
-                    AppConnect.model1.zakaz.Remove(favorite);
-                    AppConnect.model1.SaveChanges();
+                    AppConnect.model2.zakaz.Remove(favorite);
+                    AppConnect.model2.SaveChanges();
 
                     // Обновляем список
                     LoadFavorites();

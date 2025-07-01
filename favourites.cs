@@ -12,21 +12,12 @@ namespace retail
     using System;
     using System.Collections.Generic;
     
-    public partial class zakaz
+    public partial class favourites
     {
-        public static List<zakaz> ItemsSource { get; internal set; }
-        public int zakazID { get; set; }
-        public string name { get; set; }
-        public int productID { get; set; }
-        public int statusID { get; set; }
-        public int paymentID { get; set; }
+        public int favouriteID { get; set; }
         public int userID { get; set; }
-        public Nullable<System.DateTime> orderDate { get; set; }
-        public Nullable<System.DateTime> dpToDate { get; set; }
+        public int productID { get; set; }
     
-        public virtual payment payment { get; set; }
-        public virtual product product { get; set; }
-        public virtual status status { get; set; }
         public virtual users users { get; set; }
     }
 }

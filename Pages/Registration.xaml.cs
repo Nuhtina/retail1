@@ -55,7 +55,7 @@ namespace retail.Pages
                     throw new Exception("Регистрация доступна только с 18 лет");
 
                 // Проверка уникальности email
-                using (var context = new saleEntities())
+                using (var context = new saleEntities1())
                 {
                     if (context.users.Any(u => u.email == tbEmail.Text))
                         throw new Exception("Пользователь с таким email уже существует");

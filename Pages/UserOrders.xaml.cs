@@ -29,10 +29,10 @@ namespace retail.Pages
 
         private void LoadOrders()
         {
-            var userId = AppConnect.model1.users.FirstOrDefault()?.userID ?? 0;
+            var userId = AppConnect.model2.users.FirstOrDefault()?.userID ?? 0;
 
 
-            var ordersFromDb = AppConnect.model1.zakaz
+            var ordersFromDb = AppConnect.model2.zakaz
                 .Where(z => z.userID == userId)  
                 .OrderByDescending(z => z.zakazID)
                 .ToList();

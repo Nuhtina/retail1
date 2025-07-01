@@ -10,15 +10,15 @@
 
     <Page.Resources>
         <!-- Цвета -->
-        <Color x:Key="PrimaryColor">#A4B17B</Color>
-        <Color x:Key="AccentColor">#697E50</Color>
-        <Color x:Key="DarkColor">#20331B</Color>
+        <Color x:Key="PrimaryColor">#FFABC4E6</Color>
+        <Color x:Key="AccentColor">#FF2F3A6E</Color>
+        <Color x:Key="DarkColor">#FF302F38</Color>
         <SolidColorBrush x:Key="LightTextColor">#DDDDDD</SolidColorBrush>
 
         <!-- Стили кнопок -->
         <Style TargetType="Button">
-            <Setter Property="Background" Value="#FFA4B17B"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#FFABC4E6"/>
+            <Setter Property="Foreground" Value="#FF2F3A6E"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="5"/>
@@ -40,8 +40,8 @@
 
         <!-- Стиль для ListView -->
         <Style TargetType="ListView">
-            <Setter Property="Background" Value="#A4B17B"/>
-            <Setter Property="Foreground" Value="#20331B"/>
+            <Setter Property="Background" Value="#FFABC4E6"/>
+            <Setter Property="Foreground" Value="#FF2F3A6E"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
@@ -49,8 +49,8 @@
         <!-- Стиль для ComboBox -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#20331B"/>
-            <Setter Property="BorderBrush" Value="#697E50"/>
+            <Setter Property="Foreground" Value="#FF2F3A6E"/>
+            <Setter Property="BorderBrush" Value="#FFABC4E6"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
     </Page.Resources>
@@ -89,7 +89,7 @@
                         IsEnabled="{Binding ElementName=lvUsers, Path=SelectedItems.Count}" 
                         Background="#FFA5205C" Foreground="White"/>
                 <Button Content="↩" Click="BtnRefresh_Click" 
-                        ToolTip="Обновить" FontSize="20" Foreground="#20331B"
+                        ToolTip="Обновить" FontSize="20" Foreground="#FF2F3A6E"
                         Width="35" Height="35" Background="#FFABC4E6"/>
             </StackPanel>
 

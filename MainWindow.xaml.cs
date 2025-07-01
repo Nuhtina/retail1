@@ -24,7 +24,7 @@ namespace retail
         {
             InitializeComponent();
 
-            AppData.AppConnect.model1 = new saleEntities();
+            AppData.AppConnect.model2 = new saleEntities1();
             AppData.AppFrame.frmMain2 = frameMain;
             frameMain.Navigate(new Pages.Authorization());
         }

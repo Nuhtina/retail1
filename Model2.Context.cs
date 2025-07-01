@@ -13,10 +13,10 @@ namespace retail
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class saleEntities : DbContext
+    public partial class saleEntities1 : DbContext
     {
-        public saleEntities()
-            : base("name=saleEntities")
+        public saleEntities1()
+            : base("name=saleEntities1")
         {
         }
     
@@ -26,11 +26,13 @@ namespace retail
         }
     
         public DbSet<brand> brand { get; set; }
+        public DbSet<cart> cart { get; set; }
         public DbSet<category> category { get; set; }
         public DbSet<colour> colour { get; set; }
         public DbSet<country> country { get; set; }
         public DbSet<department> department { get; set; }
         public DbSet<fastener> fastener { get; set; }
+        public DbSet<favourites> favourites { get; set; }
         public DbSet<material> material { get; set; }
         public DbSet<payment> payment { get; set; }
         public DbSet<product> product { get; set; }

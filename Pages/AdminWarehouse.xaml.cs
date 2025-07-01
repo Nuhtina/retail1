@@ -21,27 +21,38 @@ namespace retail.Pages
     /// </summary>
     public partial class AdminWarehouse : Page
     {
+        List<warehouse> itemlog1;
         public AdminWarehouse()
         {
             InitializeComponent();
-            lvWarehouse.ItemsSource = ListWarehouse;
+            //itemlog1.ItemsSource = AppData.AppConnect.model1.warehouse;
             LoadWarehouseData();
         }
 
         // Пример загрузки данных (замените на реальные данные из БД)
         private void LoadWarehouseData()
         {
+            //try
+            //{
+            //    var list = AppConnect.model1.warehouse
+            //        .Include(warehouse => product.productID)
+            //        .Include(product => wear.name)
+            //        .Include(warehouse => warehouse.quantity)
+            //        .ToList();
+
+            //    itemlog1.Clear();
+            //    foreach (var item in list)
+            //        itemlog1.Add(item);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+            //        MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
             try
             {
-                var list = AppConnect.model1.warehouse
-                    .Include(warehouse => product.productID)
-                    .Include(product => wear.name)
-                    .Include(warehouse => warehouse.quantity)
-                    .ToList();
-
-                ListWarehouse.Clear();
-                foreach (var item in list)
-                    ListWarehouse.Add(item);
+                itemlog1 = AppConnect.model2.warehouse.ToList();
+                lvWarehouse.ItemsSource = itemlog1;
             }
             catch (Exception ex)
             {
@@ -77,6 +88,14 @@ namespace retail.Pages
             if (MessageBox.Show("Вы уверены, что хотите выйти?", "Выход", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 NavigationService.Navigate(new Authorization()); // Переход на страницу входа
+            }
+        }
+
+        private void BtnEditWarehouse_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvWarehouse.SelectedItem is warehouse selected)
+            {
+                NavigationService.Navigate(new AdminDataOutput());
             }
         }
     }

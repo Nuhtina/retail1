@@ -36,7 +36,7 @@ namespace retail.Pages
             {
                 if (CurrentUser.User == null) return;
 
-                var orders = AppConnect.model1.zakaz
+                var orders = AppConnect.model2.zakaz
                     .Include("Product")
                     .Where(z => z.userID == CurrentUser.User.userID && z.statusID == 1) 
                     .ToList();
@@ -44,7 +44,7 @@ namespace retail.Pages
                 if (orders != null && orders.Any())
                 {
                     lvCartItems.ItemsSource = orders;
-                    TotalAmount = orders.Sum(o => o.product?.price ?? 0); 
+                    TotalAmount = orders.Sum(z => z.product?.price ?? 0); 
                 }
             }
             catch (Exception ex)
@@ -56,15 +56,15 @@ namespace retail.Pages
 
         private void BtnRemove_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is int zakazId)
+            if (sender is Button button && button.Tag is int zakazID)
             {
                 try
                 {
-                    var item = AppConnect.model1.zakaz.Find(zakazId);
+                    var item = AppConnect.model2.zakaz.Find(zakazID);
                     if (item != null)
                     {
-                        AppConnect.model1.zakaz.Remove(item);
-                        AppConnect.model1.SaveChanges();
+                        AppConnect.model2.zakaz.Remove(item);
+                        AppConnect.model2.SaveChanges();
                         LoadCartItems();
                     }
                 }
@@ -92,7 +92,7 @@ namespace retail.Pages
                 return;
             }
 
-            NavigationService.Navigate(new CheckoutPage());
+            NavigationService.Navigate(new AdminOrders());
         }
 
         private void BtnMain_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new UserDataOutput());
@@ -107,8 +107,9 @@ namespace retail.Pages
 
         private void BtnUserOrders_Click(object sender, RoutedEventArgs e)
         {
-            
+            NavigationService.Navigate(new UserOrders());
         }
+
     }
 
 }

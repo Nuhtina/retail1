@@ -141,10 +141,10 @@
 
             <Border Grid.Row="9" Background="#FF39393B" CornerRadius="8" Padding="10" Margin="0,66,0,40" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Изображение:" Width="150" Foreground="#FF7174B9" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                    <TextBox x:Name="tbImage" Width="300" 
+                    <TextBlock Text="Стоимость:" Width="150" Foreground="#FF7174B9" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBox x:Name="tbPrice" Width="300" 
                              Style="{StaticResource RoundedTextBox}"
-                             Text="{Binding product.image}"/>
+                             Text="{Binding product.price}"/>
                 </StackPanel>
             </Border>
 
